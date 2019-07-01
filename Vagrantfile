@@ -63,19 +63,4 @@ Vagrant.configure(2) do |config|
     rs.vm.provision "shell", privileged: true, path: "prov/setup_rs.sh"
   end
 
-  config.vm.define :util do |util|
-    util.vm.box = "bento/debian-8.7"
-    util.vm.network "private_network", ip: "10.254.0.250",   virtualbox__intnet: "gobgp-t_util"
-    util.vm.provider "virtualbox" do |v|
-      v.cpus = 2
-      v.memory = 512
-    end
-    util.vm.provision "shell", privileged: true, inline: <<-EOS
-      grep 127.0.1.2 /etc/hosts || echo 127.0.1.2 util >> /etc/hosts
-      hostnamectl set-hostname util
-      systemctl restart rsyslog
-    EOS
-    util.vm.provision "shell", privileged: true, path: "prov/setup_util.sh"
-  end
-
 end
